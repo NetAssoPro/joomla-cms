@@ -277,6 +277,16 @@ class CssMenu
 		foreach ($children as $item)
 		{
 			$itemParams = $item->getParams();
+			if ($itemParams->get('menu-permission'))
+			    {
+				@list($action, $asset) = explode(';', $itemParams->get('menu-permission'));
+
+				if (!$user->authorise($action, $asset))
+				{
+				    $parent->removeChild($item);
+				    continue;
+				}
+			    }
 
 			// Exclude item with menu item option set to exclude from menu modules
 			if ($itemParams->get('menu_show', 1) == 0)
